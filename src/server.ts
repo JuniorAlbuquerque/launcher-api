@@ -30,7 +30,7 @@ class Server {
 
   public routes() {
     this.app.get('/', (req: Request, res: Response) => {
-      res.json({ message: 'Hello World' })
+      res.json({ message: 'Launcher api :D' })
     })
   }
 

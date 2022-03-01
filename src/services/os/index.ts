@@ -1,23 +1,15 @@
 import os from 'os'
-import osutils from 'os-utils'
+import osutils from 'node-os-utils'
 
-function getCPUUsage() {
-  return new Promise((resolve) => {
-    osutils.cpuUsage((value) => resolve(value))
-  })
-}
-
-const cpuInfo = async () => {
-  const cpuUsage = await getCPUUsage()
-  return cpuUsage
+const cpuUsageInfo = async () => {
+  const cpu = osutils.cpu
+  const usage = await cpu.usage()
+  return usage
 }
 
 const osInfo = {
   cpu: os.cpus()[0],
-  memory: os.totalmem(),
-  freeMemory: os.freemem(),
-  platform: os.platform(),
-  cpuCount: osutils.cpuCount()
+  platform: os.platform()
 }
 
-export { osInfo, cpuInfo }
+export { osInfo, cpuUsageInfo }
