@@ -1,23 +1,45 @@
-import express from 'express'
-import microstatsConnect from './services/microstats'
-import { Server } from 'socket.io'
-import http from 'http'
-import { socketConnect } from './services/socket'
+import express, { Request, Response } from 'express'
 import cors from 'cors'
+import http from 'http'
+import { Server as SocketServer } from 'socket.io'
+import { socketConnect } from '@app/services/socket'
+import microstatsConnect from '@app/services/microstats'
 
-const app = express()
-app.use(cors())
+class Server {
+  private port = 3333
+  private app: express.Application
+  private httpServer: http.Server
 
-const httpServer = http.createServer(app)
-const io = new Server(httpServer)
+  constructor() {
+    this.app = express()
+    this.httpServer = http.createServer(this.app)
+    this.config()
+    this.configSocket()
+  }
 
-app.get('/', (req, res) => {
-  return res.json({ message: 'Ola 2' })
-})
+  public config() {
+    this.app.set('port', this.port)
+    this.app.use(cors())
+  }
 
-socketConnect(io)
-microstatsConnect()
+  public configSocket() {
+    const io = new SocketServer(this.httpServer)
+    socketConnect(io)
+    microstatsConnect()
+  }
 
-httpServer.listen(3333, async () => {
-  console.log('Server listening')
-})
+  public routes() {
+    this.app.get('/', (req: Request, res: Response) => {
+      res.json({ message: 'Hello World' })
+    })
+  }
+
+  public start() {
+    this.httpServer.listen(this.app.get('port'), () => {
+      console.log(`Server running ir port ${this.app.get('port')}`)
+    })
+  }
+}
+
+const server = new Server()
+server.start()
