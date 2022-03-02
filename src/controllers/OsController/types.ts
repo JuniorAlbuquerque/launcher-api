@@ -1,6 +1,6 @@
 import os from 'os'
 
-export type CpuDataDto = {
+export interface ICpuData {
   cpu: os.CpuInfo
   platform: string
 }

@@ -1,7 +1,7 @@
 import { osInfo } from '@app/services/os'
 import { Router, Request, Response } from 'express'
 import { ResponseError } from '../types'
-import { CpuDataDto } from './types'
+import { ICpuData } from './types'
 
 export class OsController {
   public router: Router
@@ -13,7 +13,7 @@ export class OsController {
 
   private index = async (
     req: Request,
-    res: Response<CpuDataDto | ResponseError>
+    res: Response<ICpuData | ResponseError>
   ) => {
     const cpuInfo = {
       ...osInfo.cpu,
