@@ -1,9 +1,9 @@
 import { formatBytes } from '@app/utils/formatBytes'
+import { uniqueItemsInArray } from '@app/utils/uniqueArray'
 import microstats from 'microstats'
-import { cpuUsageInfo, osInfo } from '../os'
+import { cpuUsageInfo } from '../os'
 import { socketEmit } from '../socket'
 import {
-  CpuData,
   DiskData,
   MemoryData,
   MemoryDataResonse,
@@ -12,6 +12,7 @@ import {
 
 const microstatsConnect = () => {
   const options = { frequency: '3s' }
+  let disks: DiskData[] = []
 
   microstats.on('memory', function (value: MemoryData) {
     const memory: MemoryDataResonse = {
@@ -27,26 +28,24 @@ const microstatsConnect = () => {
   })
 
   microstats.on('disk', function (value) {
-    const disks: DiskData[] = []
-    disks.push(value)
+    disks = [...disks, value]
+    const pcDisks = uniqueItemsInArray(disks, 'filesystem')
 
     socketEmit<DiskData[]>({
       topic: MicroStatsEnum.DISK,
-      message: value
+      message: pcDisks
     })
   })
 
   microstats.on('cpu', async function () {
-    const cpuUsageInPercentage = await cpuUsageInfo()
-    const cpuData: CpuData = {
-      cpu: osInfo.cpu,
-      platform: osInfo.platform === 'win32' ? 'Windows' : '-',
-      cpuUsage: `${cpuUsageInPercentage} %`
-    }
+    const cpuUsage = await cpuUsageInfo()
+    const cpuUsageInPercentage = `${cpuUsage} %`
 
-    socketEmit<CpuData>({
+    socketEmit({
       topic: MicroStatsEnum.CPU,
-      message: cpuData
+      message: {
+        cpuUsageInPercentage
+      }
     })
   })
 

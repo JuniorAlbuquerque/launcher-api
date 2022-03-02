@@ -1,5 +1,3 @@
-import os from 'os'
-
 export enum MicroStatsEnum {
   MEMORY = 'MEMORY',
   DISK = 'DISK',
@@ -23,10 +21,4 @@ export type DiskData = {
   usedpct: number
   total: number
   free: number
-}
-
-export type CpuData = {
-  cpu: os.CpuInfo
-  platform: string
-  cpuUsage: string
 }
