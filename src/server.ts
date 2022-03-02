@@ -4,31 +4,49 @@ import http from 'http'
 import { Server as SocketServer } from 'socket.io'
 import { socketConnect } from '@app/services/socket'
 import microstatsConnect from '@app/services/microstats'
+import { UserController } from './controllers/UserController'
+import { OsController } from './controllers/OsController'
+import { WeatherController } from './controllers/WeatherController'
 
 class Server {
   private port = 3333
+  private baseUrl = '/api'
   private app: express.Application
   private httpServer: http.Server
+
+  private userController: UserController
+  private osController: OsController
+  private weatherController: WeatherController
 
   constructor() {
     this.app = express()
     this.httpServer = http.createServer(this.app)
+    this.userController = new UserController()
+    this.osController = new OsController()
+    this.weatherController = new WeatherController()
+
     this.config()
     this.configSocket()
+    this.routes()
   }
 
-  public config() {
+  private config() {
     this.app.set('port', this.port)
     this.app.use(cors())
+    this.app.use(express.json())
   }
 
-  public configSocket() {
+  private configSocket() {
     const io = new SocketServer(this.httpServer)
     socketConnect(io)
     microstatsConnect()
   }
 
-  public routes() {
+  private routes() {
+    this.app.use(this.baseUrl, this.userController.router)
+    this.app.use(this.baseUrl, this.osController.router)
+    this.app.use(this.baseUrl, this.weatherController.router)
+
     this.app.get('/', (req: Request, res: Response) => {
       res.json({ message: 'Launcher api :D' })
     })
