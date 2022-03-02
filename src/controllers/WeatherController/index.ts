@@ -3,7 +3,7 @@ import { ResponseError } from '../types'
 
 import axios from 'axios'
 import { WeatherMap } from '@app/mappers/WeatherMap'
-import { WeatherDataDto } from '@app/dtos/weatherDto'
+import { WeatherDataDto } from '@app/dtos/weatherDTO'
 import { IWeatherResponse } from './types'
 
 const apiKey = '46737a507a404460a2f210730222802'

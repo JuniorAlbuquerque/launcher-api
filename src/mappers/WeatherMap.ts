@@ -1,5 +1,5 @@
 import { IWeatherResponse } from '@app/controllers/WeatherController/types'
-import { WeatherDataDto } from '@app/dtos/weatherDto'
+import { WeatherDataDto } from '@app/dtos/weatherDTO'
 
 export class WeatherMap {
   static toDto(weatherData: IWeatherResponse): WeatherDataDto {
