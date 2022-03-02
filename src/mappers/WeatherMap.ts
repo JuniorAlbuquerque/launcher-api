@@ -21,11 +21,14 @@ export class WeatherMap {
         icon: current.condition.icon.slice(2)
       },
       info: {
-        cloud: current.cloud,
+        temp_c: current.temp_c,
         humidity: current.humidity,
         is_day: current.is_day,
-        last_updated: current.last_updated,
-        temp_c: current.temp_c
+        cloud: current.cloud,
+        last_updated: formatDate(current.last_updated, {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        })
       }
     }
   }

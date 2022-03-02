@@ -1,15 +1,12 @@
 import { Request, Response, Router } from 'express'
-import { ResponseError } from '../types'
-
 import axios from 'axios'
 import { WeatherMap } from '@app/mappers/WeatherMap'
 import { WeatherDataDto } from '@app/dtos/weatherDTO'
 import { IWeatherResponse } from './types'
+import { ResponseError } from '@app/types'
 
-const apiKey = '46737a507a404460a2f210730222802'
 const location = 'Itacoatiara'
 const lang = 'pt'
-const baseUrlWeather = 'http://api.weatherapi.com/v1/current.json'
 
 export class WeatherController {
   public router: Router
@@ -23,13 +20,16 @@ export class WeatherController {
     req: Request,
     res: Response<WeatherDataDto | ResponseError>
   ) => {
-    const { data } = await axios.get<IWeatherResponse>(baseUrlWeather, {
-      params: {
-        key: apiKey,
-        q: location,
-        lang: lang
+    const { data } = await axios.get<IWeatherResponse>(
+      process.env.WEATHER_API_URL,
+      {
+        params: {
+          key: process.env.WEATHER_API_KEY,
+          q: location,
+          lang: lang
+        }
       }
-    })
+    )
 
     res.json(WeatherMap.toDto(data))
   }
