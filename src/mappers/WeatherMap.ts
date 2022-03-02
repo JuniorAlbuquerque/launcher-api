@@ -1,5 +1,6 @@
 import { IWeatherResponse } from '@app/controllers/WeatherController/types'
 import { WeatherDataDto } from '@app/dtos/weatherDTO'
+import { formatDate } from '@app/utils/formatDate'
 
 export class WeatherMap {
   static toDto(weatherData: IWeatherResponse): WeatherDataDto {
@@ -7,13 +8,19 @@ export class WeatherMap {
 
     return {
       location: {
-        name: location.name,
+        city: location.name,
+        region: location.region,
         country: location.country,
-        localtime: location.localtime,
-        region: location.region
+        localtime: formatDate(location.localtime, {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        })
       },
-      current: {
-        condition: current.condition,
+      condition: {
+        text: current.condition.text,
+        icon: current.condition.icon.slice(2)
+      },
+      info: {
         cloud: current.cloud,
         humidity: current.humidity,
         is_day: current.is_day,
