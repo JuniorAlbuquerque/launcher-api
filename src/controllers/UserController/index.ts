@@ -1,12 +1,15 @@
+import { UserDto } from '@app/dtos/userDTO'
+import { UserMap } from '@app/mappers/UserMap'
 import { Request, Response, Router } from 'express'
+import { userInfo } from 'os'
 import { ResponseError } from '../types'
-import { UserDto } from './types'
+import { IUserData } from './types'
 
 export class UserController {
   public router: Router
-  private user = {
+  private user: IUserData = {
     username: 'jnralb',
-    name: 'Júnior Albuquerque',
+    name: userInfo().username,
     level: 20,
     password: 'secret'
   }
@@ -23,11 +26,7 @@ export class UserController {
     const { username, password } = req.body
 
     if (this.user.username === username && this.user.password === password) {
-      res.status(200).json({
-        user: this.user.username,
-        name: this.user.name,
-        level: this.user.level
-      })
+      res.status(200).json(UserMap.toDto(this.user))
 
       return
     }
