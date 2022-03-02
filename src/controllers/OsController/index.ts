@@ -1,6 +1,6 @@
 import { osInfo } from '@app/services/os'
+import { ResponseError } from '@app/types'
 import { Router, Request, Response } from 'express'
-import { ResponseError } from '../types'
 import { ICpuData } from './types'
 
 export class OsController {

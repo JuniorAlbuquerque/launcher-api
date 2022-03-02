@@ -1,8 +1,8 @@
 import { UserDto } from '@app/dtos/userDTO'
 import { UserMap } from '@app/mappers/UserMap'
+import { ResponseError } from '@app/types'
 import { Request, Response, Router } from 'express'
 import { userInfo } from 'os'
-import { ResponseError } from '../types'
 import { IUserData } from './types'
 
 export class UserController {

@@ -2,12 +2,11 @@ import 'dotenv/config'
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import http from 'http'
-import { Server as SocketServer } from 'socket.io'
-import { socketConnect } from '@app/services/socket'
 import microstatsConnect from '@app/services/microstats'
 import { UserController } from './controllers/UserController'
 import { OsController } from './controllers/OsController'
 import { WeatherController } from './controllers/WeatherController'
+import { useSocket } from '@app/services/socket'
 
 class Server {
   private port = 3333
@@ -21,13 +20,14 @@ class Server {
 
   constructor() {
     this.app = express()
-    this.httpServer = http.createServer(this.app)
+    this.httpServer = useSocket(this.app)
+
     this.userController = new UserController()
     this.osController = new OsController()
     this.weatherController = new WeatherController()
 
     this.config()
-    this.configSocket()
+    this.starMicrostats()
     this.routes()
   }
 
@@ -37,9 +37,7 @@ class Server {
     this.app.use(express.json())
   }
 
-  private configSocket() {
-    const io = new SocketServer(this.httpServer)
-    socketConnect(io)
+  private starMicrostats() {
     microstatsConnect()
   }
 
