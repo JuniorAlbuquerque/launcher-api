@@ -12,6 +12,25 @@ export class GameController {
     this.routes()
   }
 
+  private index = async (req: Request, res: Response) => {
+    const games = [
+      {
+        id: 0,
+        name: 'Counter Strike Global Offensive',
+        image: 'none',
+        path: '/launch/csgo'
+      },
+      {
+        id: 1,
+        name: 'Rocket League',
+        image: 'none',
+        path: '/launch/rocketleague'
+      }
+    ]
+
+    res.json(games)
+  }
+
   private launchSteam = async (req: Request, res: Response) => {
     try {
       const { stdout } = await this.execGame(GamesPath.STEAM)
@@ -61,6 +80,7 @@ export class GameController {
   }
 
   private routes() {
+    this.router.get('/games', this.index)
     this.router.get('/launch/steam', this.launchSteam)
     this.router.get('/launch/csgo', this.launchCsGo)
     this.router.get('/launch/rocketleague', this.launchRocketLeague)
