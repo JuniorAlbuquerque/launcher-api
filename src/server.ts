@@ -7,6 +7,7 @@ import { UserController } from './controllers/UserController'
 import { OsController } from './controllers/OsController'
 import { WeatherController } from './controllers/WeatherController'
 import { useSocket } from '@app/services/socket'
+import { GameController } from './controllers/GameController'
 
 class Server {
   private port = 3333
@@ -17,6 +18,7 @@ class Server {
   private userController: UserController
   private osController: OsController
   private weatherController: WeatherController
+  private gameController: GameController
 
   constructor() {
     this.app = express()
@@ -25,6 +27,7 @@ class Server {
     this.userController = new UserController()
     this.osController = new OsController()
     this.weatherController = new WeatherController()
+    this.gameController = new GameController()
 
     this.config()
     this.starMicrostats()
@@ -45,6 +48,7 @@ class Server {
     this.app.use(this.baseUrl, this.userController.router)
     this.app.use(this.baseUrl, this.osController.router)
     this.app.use(this.baseUrl, this.weatherController.router)
+    this.app.use(this.baseUrl, this.gameController.router)
 
     this.app.get('/', (req: Request, res: Response) => {
       res.json({ message: 'Launcher api :D' })
