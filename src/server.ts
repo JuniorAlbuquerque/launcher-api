@@ -8,40 +8,47 @@ import { OsController } from './controllers/OsController'
 import { WeatherController } from './controllers/WeatherController'
 import { useSocket } from '@app/services/socket'
 import { GameController } from './controllers/GameController'
-
+import { getPingStatus } from './services/ping'
+import {
+  gameController,
+  osController,
+  userController,
+  weatherController
+} from './controllers'
 class Server {
-  private port = 3333
-  private baseUrl = '/api'
+  private port = process.env.PORT
+  private baseUrl = process.env.BASE_URL
   private app: express.Application
   private httpServer: http.Server
 
-  private userController: UserController
-  private osController: OsController
-  private weatherController: WeatherController
-  private gameController: GameController
-
-  constructor() {
+  constructor(
+    private userController: UserController,
+    private osController: OsController,
+    private weatherController: WeatherController,
+    private gameController: GameController
+  ) {
     this.app = express()
     this.httpServer = useSocket(this.app)
 
-    this.userController = new UserController()
-    this.osController = new OsController()
-    this.weatherController = new WeatherController()
-    this.gameController = new GameController()
-
-    this.config()
+    this.configuration()
     this.starMicrostats()
     this.routes()
+    this.pingConnect()
   }
 
-  private config() {
+  private configuration() {
     this.app.set('port', this.port)
     this.app.use(cors())
     this.app.use(express.json())
+    this.app.use('/static', express.static(__dirname + '/public'))
   }
 
   private starMicrostats() {
     microstatsConnect()
+  }
+
+  private pingConnect() {
+    getPingStatus('discord.com', 2000)
   }
 
   private routes() {
@@ -56,11 +63,16 @@ class Server {
   }
 
   public start() {
-    this.httpServer.listen(this.app.get('port'), () => {
+    this.httpServer.listen(this.app.get('port') || 3333, () => {
       console.log(`Server running ir port ${this.app.get('port')}`)
     })
   }
 }
 
-const server = new Server()
+const server = new Server(
+  userController,
+  osController,
+  weatherController,
+  gameController
+)
 server.start()
