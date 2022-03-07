@@ -1,5 +1,5 @@
 export enum GamesPath {
   STEAM = '"C:\\Program Files (x86)\\Steam\\steam"',
-  CSGO = '"E:\\SteamLibrary\\steamapps\\common\\Counter-Strike Global Offensive"',
+  CSGO = '"C:\\Users\\Junior\\Desktop\\Counter-Strike Global Offensive.url"',
   ROCKET_LEAGUE = '"E:\\Games\\Epic\\rocketleague\\Binaries\\Win64\\RocketLeague"'
 }

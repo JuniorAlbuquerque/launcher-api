@@ -17,13 +17,13 @@ export class GameController {
       {
         id: 0,
         name: 'Counter Strike Global Offensive',
-        image: 'none',
+        image: 'http://localhost:3333/static/csgo.png',
         path: '/launch/csgo'
       },
       {
         id: 1,
         name: 'Rocket League',
-        image: 'none',
+        image: 'http://localhost:3333/static/rocketleague.jpg',
         path: '/launch/rocketleague'
       }
     ]
