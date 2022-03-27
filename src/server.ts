@@ -15,6 +15,7 @@ import {
   userController,
   weatherController
 } from './controllers'
+import { initGameListener } from './services/gameMonitor'
 class Server {
   private port = process.env.PORT
   private baseUrl = process.env.BASE_URL
@@ -34,6 +35,7 @@ class Server {
     this.starMicrostats()
     this.routes()
     this.pingConnect()
+    this.listenGames()
   }
 
   private configuration() {
@@ -49,6 +51,10 @@ class Server {
 
   private pingConnect() {
     getPingStatus('discord.com', 2000)
+  }
+
+  private listenGames() {
+    initGameListener()
   }
 
   private routes() {

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { exec } from 'child_process'
 import util from 'util'
-import { GamesPath } from './types'
+import { gameList, GamesPath } from './types'
 
 export class GameController {
   public router: Router
@@ -13,22 +13,7 @@ export class GameController {
   }
 
   private index = async (req: Request, res: Response) => {
-    const games = [
-      {
-        id: 0,
-        name: 'Counter Strike Global Offensive',
-        image: 'http://localhost:3333/static/csgo.png',
-        path: '/launch/csgo'
-      },
-      {
-        id: 1,
-        name: 'Rocket League',
-        image: 'http://localhost:3333/static/rocketleague.jpg',
-        path: '/launch/rocketleague'
-      }
-    ]
-
-    res.json(games)
+    res.json(gameList)
   }
 
   private launchSteam = async (req: Request, res: Response) => {

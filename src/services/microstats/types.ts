@@ -19,6 +19,6 @@ export type MemoryDataResonse = {
 export type DiskData = {
   filesystem: string
   usedpct: number
-  total: number
-  free: number
+  total: string
+  free: string
 }

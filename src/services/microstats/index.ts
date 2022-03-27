@@ -11,7 +11,7 @@ import {
 } from './types'
 
 const microstatsConnect = () => {
-  const options = { frequency: '3s' }
+  const options = { frequency: '1s' }
   let disks: DiskData[] = []
 
   microstats.on('memory', function (value: MemoryData) {
@@ -28,7 +28,14 @@ const microstatsConnect = () => {
   })
 
   microstats.on('disk', function (value) {
-    disks = [...disks, value]
+    const disk = {
+      filesystem: value.filesystem,
+      usedpct: value.usedpct,
+      total: formatBytes(value.total),
+      free: formatBytes(value.free)
+    }
+
+    disks = [...disks, disk]
     const pcDisks = uniqueItemsInArray(disks, 'filesystem')
 
     socketEmit<DiskData[]>({
