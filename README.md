@@ -1,6 +1,6 @@
 # Super Launcher Api
 
-Api for running pc games, monitoring cpu and cryptocurrency information services, weather.
+Api for running pc games, monitoring cpu, cryptocurrency information services and weather.
 
 ## About Stack
 
