@@ -1,5 +1,4 @@
 import { exec } from 'child_process'
-import { socketEmit } from '../socket'
 
 const isRunning = (query, cb) => {
   const platform = process.platform
@@ -22,14 +21,4 @@ const isRunning = (query, cb) => {
   })
 }
 
-const checkProccessAndEmit = (process: string) => {
-  isRunning(process, (status) => {
-    socketEmit({
-      topic: process,
-      message: status
-    })
-    console.log(process, status)
-  })
-}
-
-export { checkProccessAndEmit }
+export { isRunning }

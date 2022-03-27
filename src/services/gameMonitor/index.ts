@@ -1,11 +1,12 @@
 import { gameList } from '@app/controllers/GameController/types'
 import { promosifyFn } from '@app/utils/promisify'
 import { QueueFn } from '@app/utils/queuedFn'
-import { checkProccessAndEmit } from '../os/proccess'
-import { socketListener } from '../socket'
+import { isRunning } from '../os/proccess'
+import { socketEmit, socketListener } from '../socket'
 
 const initGameListener = async () => {
-  const defaultDelay = 1000
+  const defaultDelay = 2000
+  const listener: { [key: string]: boolean } = {}
   const qfn = new QueueFn(1)
 
   let listenId: NodeJS.Timer
@@ -14,8 +15,19 @@ const initGameListener = async () => {
     gameList.forEach((game) => {
       qfn.enqueue(
         async () =>
-          await promosifyFn(() => checkProccessAndEmit(game?.executable))
+          await promosifyFn(() =>
+            isRunning(game?.executable, (value: boolean) => {
+              listener[game?.executable] = value
+            })
+          )
       )
+    })
+
+    if (Object.keys(listener).length === 0) return
+
+    socketEmit({
+      topic: 'GAME_RUNNING',
+      message: listener
     })
   }
 
